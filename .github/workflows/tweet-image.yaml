@@ -2,7 +2,7 @@ name: AI Image Generation and Twitter Post
 
 on:
   schedule:
-    - cron: '0 * * * *'  # 毎時実行
+    - cron: '0 0 * * *'  # 毎時実行
   workflow_dispatch:  # 手動実行用
 
 jobs:
