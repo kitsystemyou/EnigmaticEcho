@@ -63,8 +63,11 @@ def generate_and_post_image(prompt, tweet_text):
 
     except Exception as e:
         print(f"エラーが発生しました: {str(e)}")
-        os.remove(temp_image)
         return None
+
+    finally:
+        if os.path.exists(temp_image):
+            os.remove(temp_image)
 
 if __name__ == "__main__":
     # 環境変数の設定
