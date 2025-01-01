@@ -63,7 +63,7 @@ def generate_and_post_image(prompt, tweet_text):
 
     except Exception as e:
         print(f"エラーが発生しました: {str(e)}")
-        return None
+        return e
 
     finally:
         if os.path.exists(temp_image):
