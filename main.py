@@ -29,6 +29,7 @@ def setup_twitter_clients():
 
 def generate_and_post_image(prompt, tweet_text):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    temp_image = "temp_image.png"
 
     try:
         # 画像生成
@@ -43,8 +44,7 @@ def generate_and_post_image(prompt, tweet_text):
         # 画像ダウンロード
         image_url = response.data[0].url
         image_response = requests.get(image_url)
-        
-        temp_image = "temp_image.png"
+
         with open(temp_image, "wb") as f:
             f.write(image_response.content)
 
