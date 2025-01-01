@@ -70,7 +70,7 @@ def generate_and_post_image(prompt, tweet_text):
             os.remove(temp_image)
 
 if __name__ == "__main__":
-    # 環境変数の設定
+    # 環境変数の設定(デバッグ用)
     # os.environ["OPENAI_API_KEY"] = ""
     # os.environ["TWITTER_API_KEY"] = ""
     # os.environ["TWITTER_API_SECRET"] = ""
