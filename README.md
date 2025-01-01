@@ -1,2 +1,2 @@
 # EnigmaticEcho
-Automation image posting system with DALLE
+Automation image posting system with DALL-E
