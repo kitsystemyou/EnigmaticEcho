@@ -71,11 +71,11 @@ def generate_and_post_image(prompt, tweet_text):
 
 if __name__ == "__main__":
     # 環境変数の設定
-    os.environ["OPENAI_API_KEY"] = ""
-    os.environ["TWITTER_API_KEY"] = ""
-    os.environ["TWITTER_API_SECRET"] = ""
-    os.environ["TWITTER_ACCESS_TOKEN"] = ""
-    os.environ["TWITTER_ACCESS_TOKEN_SECRET"] = ""
+    # os.environ["OPENAI_API_KEY"] = ""
+    # os.environ["TWITTER_API_KEY"] = ""
+    # os.environ["TWITTER_API_SECRET"] = ""
+    # os.environ["TWITTER_ACCESS_TOKEN"] = ""
+    # os.environ["TWITTER_ACCESS_TOKEN_SECRET"] = ""
 
     # 画像生成と投稿
     prompt = "紅い目で長い銀髪の女性、全身、京アニ風のアニメーション調の描画"
