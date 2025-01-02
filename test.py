@@ -46,5 +46,5 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = ""
     
     # 画像生成
-    prompt = "紅い目で長い銀髪の女性、全身、京アニ風のアニメーション調の描画"
+    prompt = "紅い目で長い銀髪の20代ぐらいの女性、全身、幻想的な背景、アニメーション調のソフトで多彩な色彩の描画"
     generate_and_save_image(prompt)
