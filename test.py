@@ -2,6 +2,7 @@ import os
 from openai import OpenAI
 import requests
 from datetime import datetime
+from generate_prompt import generate_image_prompt
 
 def generate_and_save_image(prompt, output_dir="generated_images"):
     # OpenAI clientの初期化
@@ -17,7 +18,8 @@ def generate_and_save_image(prompt, output_dir="generated_images"):
             prompt=prompt,
             size="1024x1024",
             quality="standard",
-            n=1
+            n=1,
+            timeout=1000
         )
         
         # 画像URLの取得
@@ -46,5 +48,13 @@ if __name__ == "__main__":
     os.environ["OPENAI_API_KEY"] = ""
     
     # 画像生成
-    prompt = "紅い目で長い銀髪の20代ぐらいの女性、全身、幻想的な背景、日本のアニメーション調の繊細で多彩な色彩の画像"
+    # prompt = "紅い目で長い銀髪の20代ぐらいの女性、全身、幻想的な背景、日本のアニメーション調の繊細で多彩な色彩の画像"
+    prompt = generate_image_prompt(
+        # art_style="水彩画風のやわらかいタッチ",
+        age="20歳前後",
+        hair="美しい銀髪、波打つセミロング",
+        # pose="本を読んでいる姿勢",
+        # scene="図書館の窓際で読書を楽しむ様子"
+    )
+    print(prompt)
     generate_and_save_image(prompt)

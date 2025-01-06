@@ -1,7 +1,7 @@
 from typing import Optional
 
 def generate_image_prompt(
-    art_style: Optional[str] = "ソフトな色使いと精細な線画の現代アニメスタイル",
+    art_style: Optional[str] = "ソフトな色使い、精細な線画の現代アニメーションスタイル",
     gender: Optional[str] = "女性",
     age: Optional[str] = "少女",
     hair: Optional[str] = "ミディアムの波打つ髪、キャラメルブラウン、ヘアアクセサリーのディテール",
@@ -44,7 +44,7 @@ def generate_image_prompt(
         生成されたプロンプト文章
     """
     
-    prompt_template = """次の特徴を持つ画像を生成してください。
+    prompt_template = """次の特徴を持つ画像。
 画風: {art_style}
 性別: {gender}
 年齢層: {age}
@@ -80,8 +80,8 @@ if __name__ == "__main__":
     # カスタマイズした設定で生成
     custom_prompt = generate_image_prompt(
         art_style="水彩画風のやわらかいタッチ",
-        age="青年",
-        hair="短い黒髪",
+        age="20歳",
+        hair="美しく長い銀髪、風に吹かれている様子",
         pose="本を読んでいる姿勢",
         scene="図書館の窓際で読書を楽しむ様子"
     )
