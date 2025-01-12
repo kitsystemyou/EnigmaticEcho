@@ -1,5 +1,5 @@
 import os
 
 print("start")
-print(os.getenv("SCRIPT_OUTPUT"))
+print(os.getenv("SCRIPT_WORD"))
 print("end")
