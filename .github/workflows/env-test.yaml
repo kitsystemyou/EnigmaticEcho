@@ -6,7 +6,9 @@ on:
 jobs:
   post-silver-image:
     runs-on: ubuntu-latest
-    environment: silver
+    strategy:
+      matrix:
+        environment: [silver, gold, red] # 対象の環境を列挙
     
     steps:
       - uses: actions/checkout@v4
@@ -20,19 +22,19 @@ jobs:
         env:
           SCRIPT_WORD: ${{ secrets.SCRIPT_OUTPUT }}
         run: python env-test.py
-  post-gold-image:
-    runs-on: ubuntu-latest
-    environment: gold
+  # post-gold-image:
+  #   runs-on: ubuntu-latest
+  #   environment: gold
     
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.11'
           
-      - name: Run script
-        env:
-          SCRIPT_WORD: ${{ secrets.SCRIPT_OUTPUT }}
-        run: python env-test.py
+  #     - name: Run script
+  #       env:
+  #         SCRIPT_WORD: ${{ secrets.SCRIPT_OUTPUT }}
+  #       run: python env-test.py

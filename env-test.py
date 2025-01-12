@@ -5,5 +5,7 @@ word = os.getenv("SCRIPT_WORD")
 if word == "silver":
     print("env is silver🥈!!!!")
 elif word == "gold":
-    print("env is goldk🥇")
+    print("env is gold🥇")
+else:
+    print("other secret")
 print("end")
