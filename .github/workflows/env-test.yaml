@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         environment: [silver, gold, red] # 対象の環境を列挙
+    environment: ${{ matrix.environment }}
     
     steps:
       - uses: actions/checkout@v4
