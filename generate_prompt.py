@@ -3,7 +3,7 @@ from typing import Optional
 def generate_image_prompt(
     art_style: Optional[str] = "ソフトな色使い、精細な線画の現代アニメーションスタイル",
     gender: Optional[str] = "女性",
-    age: Optional[str] = "少女",
+    age: Optional[str] = "20歳",
     hair: Optional[str] = "ミディアムの波打つ髪、キャラメルブラウン、ヘアアクセサリーのディテール",
     pose: Optional[str] = "花を摘むやさしい手つき",
     expression: Optional[str] = "幸せそうに微笑む、表情の細かい陰影に注意",
