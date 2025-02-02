@@ -4,6 +4,7 @@ def generate_image_prompt(
     art_style: Optional[str] = "ソフトな色使い、精細な線画の現代アニメーションスタイル",
     gender: Optional[str] = "女性",
     age: Optional[str] = "20歳",
+    eye: Optional[str] = "紅",
     hair: Optional[str] = "ミディアムの波打つ髪、キャラメルブラウン、ヘアアクセサリーのディテール",
     pose: Optional[str] = "花を摘むやさしい手つき",
     expression: Optional[str] = "幸せそうに微笑む、表情の細かい陰影に注意",
@@ -48,6 +49,7 @@ def generate_image_prompt(
 画風: {art_style}
 性別: {gender}
 年齢層: {age}
+目の色: {eye}
 髪型・色: {hair}
 人物のポーズ: {pose}
 表情: {expression}
@@ -60,6 +62,7 @@ def generate_image_prompt(
         art_style=art_style,
         gender=gender,
         age=age,
+        eye=eye,
         hair=hair,
         pose=pose,
         expression=expression,
