@@ -3,8 +3,9 @@ from openai import OpenAI
 import requests
 from datetime import datetime
 from generate_prompt import generate_image_prompt
+from multiprocessing import Pool, cpu_count
 
-def generate_and_save_image(prompt, output_dir="generated_images"):
+def generate_and_save_image(prompt: str, output_dir="generated_images"):
     # OpenAI clientの初期化
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     
@@ -61,4 +62,24 @@ if __name__ == "__main__":
         scene="一人で佇んでこちらに微笑みかけている"
     )
     print(prompt)
-    generate_and_save_image(prompt)
+
+    num_processes: int = 4
+    num_iterations: int = 4
+    # 利用可能なCPUコア数を取得
+    available_cores = cpu_count()
+    # 要求されたプロセス数が利用可能なコア数を超えないようにする
+    num_processes = min(num_processes, available_cores)
+
+    # 並列処理で実行したい処理のリスト（例：画像生成のパラメータ）
+    tasks = [prompt] * num_iterations
+
+    # プロセスプールを作成
+    with Pool(processes=num_processes) as pool:
+        # 非同期で実行
+        results = pool.map_async(generate_and_save_image, tasks)
+        
+        # すべての処理が完了するまで待機
+        results.wait()
+        
+        # 結果を取得
+        completed_results = results.get()
