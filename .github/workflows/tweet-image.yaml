@@ -2,7 +2,7 @@ name: AI Image Generation and Twitter Post
 
 on:
   schedule:
-    - cron: '0 */3 * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch:  # 手動実行用
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install openai tweepy requests
+          pip install openai tweepy requests tenacity
           
       - name: Run script
         env:
