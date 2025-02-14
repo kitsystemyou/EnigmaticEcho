@@ -5,6 +5,6 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - command: pip install openai requests tweepy tenacity
+  - command: pip install openai requests tweepy
 
 
