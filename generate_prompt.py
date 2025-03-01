@@ -1,17 +1,17 @@
 from typing import Optional
 
 def generate_image_prompt(
-    art_style: Optional[str] = "ソフトな色使い、精細な線画の現代アニメーションスタイル",
-    gender: Optional[str] = "女性",
-    age: Optional[str] = "20歳",
-    eye: Optional[str] = "紅",
-    hair: Optional[str] = "ミディアムの波打つ髪、キャラメルブラウン、ヘアアクセサリーのディテール",
-    pose: Optional[str] = "花を摘むやさしい手つき",
-    expression: Optional[str] = "幸せそうに微笑む、表情の細かい陰影に注意",
-    gaze: Optional[str] = "手に持った花へと優しく",
-    clothing: Optional[str] = "春らしいフローラルドレス、花の刺繍とフリルのディテールに注目",
-    composition: Optional[str] = "花畑にいる子供の全身を捉えつつ、周囲の自然も精細に表現",
-    scene: Optional[str] = "春の日差しのもとでのびのびとした花畑、周りの花々も一つ一つ丁寧に描写"
+    art_style: Optional[str] = "Soft color palette, detailed line art in modern animation style",
+    gender: Optional[str] = "Female",
+    age: Optional[str] = "20 years old",
+    eye: Optional[str] = "Red",
+    hair: Optional[str] = "Medium wavy hair, caramel brown, with detailed hair accessories",
+    pose: Optional[str] = "Gentle hand gestures picking flowers",
+    expression: Optional[str] = "Smiling happily, pay attention to the subtle shading of the expression",
+    gaze: Optional[str] = "Gently toward the flower held in hand",
+    clothing: Optional[str] = "Spring-like floral dress, focusing on flower embroidery and frill details",
+    composition: Optional[str] = "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail",
+    scene: Optional[str] = "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
 ) -> str:
     """
     画像生成のプロンプトを作成する関数
@@ -45,19 +45,21 @@ def generate_image_prompt(
         生成されたプロンプト文章
     """
     
-    prompt_template = """次の特徴を持つ画像。
-画風: {art_style}
-性別: {gender}
-年齢層: {age}
-目の色: {eye}
-髪型・色: {hair}
-人物のポーズ: {pose}
-表情: {expression}
-視線: {gaze}
-服装・装飾: {clothing}
-構図: {composition}
-シーンや状況: {scene}"""
-    
+    prompt_template = """Please generate an image with the following characteristics.
+Art style: {art_style}
+Gender: {gender}
+Age group: {age}
+Eye color: {eye}
+Hair style/color: {hair}
+Person's pose: {pose}
+Expression: {expression}
+Gaze: {gaze}
+Clothing/decoration: {clothing}
+Composition: {composition}
+Scene or situation: {scene}
+soft, faint lines and a light color palette to create a dreamlike and fragile appearance.
+"""
+
     return prompt_template.format(
         art_style=art_style,
         gender=gender,
