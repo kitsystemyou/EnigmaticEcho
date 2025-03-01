@@ -4,6 +4,8 @@ import requests
 from datetime import datetime
 from generate_prompt import generate_image_prompt
 from multiprocessing import Pool, cpu_count
+import time
+import random
 
 def generate_and_save_image(prompt: str, output_dir="generated_images"):
     # OpenAI clientの初期化
@@ -30,7 +32,9 @@ def generate_and_save_image(prompt: str, output_dir="generated_images"):
         image_response = requests.get(image_url)
         
         # ファイル名の生成（タイムスタンプ付き）
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        wait_time_ms = random.randint(0, 1000)  # 0から1000の整数を生成
+        time.sleep(wait_time_ms / 1000)  # ミリ秒を秒に変換
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
         filename = f"{output_dir}/image_{timestamp}.png"
         
         # 画像の保存
