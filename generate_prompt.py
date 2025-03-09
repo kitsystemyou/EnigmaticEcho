@@ -114,7 +114,7 @@ soft, faint lines and a light color palette to create a dreamlike and fragile ap
         scene=scene
     )
 
-def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optional[str] = None) -> str:
+def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt.yaml") -> str:
     """
     YAMLファイルに定義されたプリセットを使用してプロンプトを生成する
     
