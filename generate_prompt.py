@@ -197,9 +197,14 @@ if __name__ == "__main__":
     print("サンプル設定ファイル 'sample_prompt_config.yaml' を作成しました。")
     print("\n" + "="*50 + "\n")
     
+    # 動作確認用
+    # os.environ["PROMPT_PRESET"] = "silver"
+
     # サンプル設定ファイルを使用したプロンプト生成
     print("YAML設定ファイルからのプロンプト:")
     preset_prompt = generate_preset_prompt("library", "sample_prompt_config.yaml")
+    # 動作確認用
+    # preset_prompt = generate_preset_prompt(config_path="prompt.yaml")
     print(preset_prompt)
     print("\n" + "="*50 + "\n")
     
