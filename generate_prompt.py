@@ -1,39 +1,7 @@
+from config import load_config_from_yaml
 from typing import Optional, Dict, Any
-import os
 import yaml
 
-
-def load_config_from_yaml(config_path: Optional[str] = None) -> Dict[str, Dict[str, str]]:
-    """
-    YAMLファイルから設定を読み込む関数
-    
-    Parameters:
-    ----------
-    config_path : str, optional
-        設定ファイルのパス
-        
-    Returns:
-    -------
-    Dict[str, Dict[str, str]]
-        読み込んだ設定
-    """
-    # 環境変数から設定ファイルのパスを取得（指定がなければデフォルト）
-    if config_path is None:
-        config_path = os.environ.get('PROMPT_CONFIG_PATH', 'prompt_config.yaml')
-    
-    # 設定ファイルが存在するか確認
-    if not os.path.exists(config_path):
-        print(f"Warning: Config file '{config_path}' not found. Using default settings.")
-        return {"default": {}}
-    
-    # YAMLファイルを読み込む
-    try:
-        with open(config_path, 'r', encoding='utf-8') as file:
-            config = yaml.safe_load(file)
-        return config
-    except Exception as e:
-        print(f"Error loading config file: {e}")
-        return {"default": {}}
 
 def generate_image_prompt(
     art_style: Optional[str] = "Soft color palette, detailed line art in modern animation style",
@@ -114,7 +82,8 @@ soft, faint lines and a light color palette to create a dreamlike and fragile ap
         scene=scene
     )
 
-def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt.yaml") -> str:
+
+def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt_config.yaml") -> str:
     """
     YAMLファイルに定義されたプリセットを使用してプロンプトを生成する
     
@@ -204,7 +173,7 @@ if __name__ == "__main__":
     print("YAML設定ファイルからのプロンプト:")
     preset_prompt = generate_preset_prompt("library", "sample_prompt_config.yaml")
     # 動作確認用
-    # preset_prompt = generate_preset_prompt(config_path="prompt.yaml")
+    # preset_prompt = generate_preset_prompt(config_path="prompt_config.yaml")
     print(preset_prompt)
     print("\n" + "="*50 + "\n")
     
