@@ -106,17 +106,6 @@ def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optio
     # 設定ファイルを読み込む
     presets = load_config_from_yaml(config_path)
     
-    # プリセットが存在するか確認
-    if preset_name not in presets:
-        print(f"Warning: Preset '{preset_name}' not found in config. Using default settings.")
-        preset_name = "default"
-        
-    # デフォルトプリセットが存在しない場合は空の辞書を使用
-    if preset_name not in presets:
-        preset_config = {}
-    else:
-        preset_config = presets[preset_name]
-    
     # プロンプトを生成して返す
     return generate_image_prompt(**preset_config)
 

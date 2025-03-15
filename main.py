@@ -34,16 +34,6 @@ def setup_twitter_clients():
 def get_tweet_text(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt_config.yaml") -> str:
     presets = load_config_from_yaml(config_path)
 
-    # 環境変数からプリセット名を取得（指定がなければデフォルト）
-    if preset_name is None:
-        preset_name = os.environ.get('PROMPT_PRESET', 'default')
-
-    # デフォルトプリセットが存在しない場合は空の辞書を使用
-    if preset_name not in presets:
-        preset_config = {}
-    else:
-        preset_config = presets[preset_name]
-
     return presets[preset_name]["tweet_text"]
 
 
