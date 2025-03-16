@@ -1,18 +1,18 @@
 # prompt_config.yaml
 # Actually, default param are defined in the func in `generate_prompt.py`
-# default:
-#   art_style: "Soft color palette, detailed line art in modern animation style"
-#   gender: "Female"
-#   age: "20 years old"
-#   eye: "Red"
-#   hair: "Medium wavy hair, caramel brown, with detailed hair accessories"
-#   pose: "Gentle hand gestures picking flowers"
-#   expression: "Smiling happily, pay attention to the subtle shading of the expression"
-#   gaze: "Gently toward the flower held in hand"
-#   clothing: "Spring-like floral dress, focusing on flower embroidery and frill details"
-#   composition: "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail"
-#   scene: "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
-#   tweet_text: tweet text. include hash tag, text, etc
+default:
+  art_style: "Soft color palette, detailed line art in modern animation style"
+  gender: "Female"
+  age: "20 years old"
+  eye: "Red"
+  hair: "Medium wavy hair, caramel brown, with detailed hair accessories"
+  pose: "Gentle hand gestures picking flowers"
+  expression: "Smiling happily, pay attention to the subtle shading of the expression"
+  gaze: "Gently toward the flower held in hand"
+  clothing: "Spring-like floral dress, focusing on flower embroidery and frill details"
+  composition: "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail"
+  scene: "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
+  tweet_text: tweet text. include hash tag, text, etc
 
 silver:
   art_style: "The illustration is done in a flat-colored anime cel-shaded style"

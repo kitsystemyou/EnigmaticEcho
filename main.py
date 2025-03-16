@@ -3,9 +3,13 @@ import os
 from openai import OpenAI
 import requests
 from datetime import datetime
-from generate_prompt import generate_preset_prompt
+from generate_prompt import generate_preset_prompt, generate_image_prompt
 from config import load_config_from_yaml
 from typing import Optional, Dict, Any
+import os
+
+
+CONFIG_PATH = "prompt_config.yaml"
 
 
 def setup_twitter_clients():
@@ -29,12 +33,6 @@ def setup_twitter_clients():
     )
 
     return api_v1, client_v2
-
-
-def get_tweet_text(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt_config.yaml") -> str:
-    presets = load_config_from_yaml(config_path)
-
-    return presets[preset_name]["tweet_text"]
 
 
 def generate_and_post_image(prompt, tweet_text):
@@ -89,6 +87,7 @@ if __name__ == "__main__":
     # os.environ["PROMPT_PRESET"] = "silver"
 
     # 画像生成と投稿
-    prompt = generate_preset_prompt()
-    tweet_text = get_tweet_text()
+    config = load_config_from_yaml(CONFIG_PATH)
+    prompt = generate_image_prompt(**config)
+    tweet_text = config["tweet_text"]
     generate_and_post_image(prompt, tweet_text)

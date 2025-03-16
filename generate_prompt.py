@@ -1,6 +1,7 @@
 from config import load_config_from_yaml
 from typing import Optional, Dict, Any
 import yaml
+import os
 
 
 def generate_image_prompt(
@@ -107,7 +108,7 @@ def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optio
     presets = load_config_from_yaml(config_path)
     
     # プロンプトを生成して返す
-    return generate_image_prompt(**preset_config)
+    return generate_image_prompt(**presets)
 
 # 使用例
 if __name__ == "__main__":
