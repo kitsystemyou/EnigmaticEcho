@@ -31,14 +31,13 @@ def load_config_from_yaml(config_path: Optional[str] = None) -> Dict[str, Dict[s
         with open(config_path, 'r', encoding='utf-8') as file:
             config = yaml.safe_load(file)
 
-            # 環境変数からプリセット名を取得（指定がなければデフォルト）
+        # 環境変数からプリセット名を取得（指定がなければデフォルト）
         preset_name = os.environ.get('PROMPT_PRESET', 'default')
+        preset_config = config.get(preset_name)
 
-        # デフォルトプリセットが存在しない場合は空の辞書を使用
-        if not config[preset_name]:
+        # 値が存在しないまたは空の場合は空の辞書を使用
+        if not preset_config:
             preset_config = {}
-        else:
-            preset_config = config[preset_name]
         return preset_config
     except Exception as e:
         print(f"Error loading config file: {e}")
