@@ -1,39 +1,8 @@
+from config import load_config_from_yaml
 from typing import Optional, Dict, Any
-import os
 import yaml
+import os
 
-
-def load_config_from_yaml(config_path: Optional[str] = None) -> Dict[str, Dict[str, str]]:
-    """
-    YAMLファイルから設定を読み込む関数
-    
-    Parameters:
-    ----------
-    config_path : str, optional
-        設定ファイルのパス
-        
-    Returns:
-    -------
-    Dict[str, Dict[str, str]]
-        読み込んだ設定
-    """
-    # 環境変数から設定ファイルのパスを取得（指定がなければデフォルト）
-    if config_path is None:
-        config_path = os.environ.get('PROMPT_CONFIG_PATH', 'prompt_config.yaml')
-    
-    # 設定ファイルが存在するか確認
-    if not os.path.exists(config_path):
-        print(f"Warning: Config file '{config_path}' not found. Using default settings.")
-        return {"default": {}}
-    
-    # YAMLファイルを読み込む
-    try:
-        with open(config_path, 'r', encoding='utf-8') as file:
-            config = yaml.safe_load(file)
-        return config
-    except Exception as e:
-        print(f"Error loading config file: {e}")
-        return {"default": {}}
 
 def generate_image_prompt(
     art_style: Optional[str] = "Soft color palette, detailed line art in modern animation style",
@@ -114,80 +83,47 @@ soft, faint lines and a light color palette to create a dreamlike and fragile ap
         scene=scene
     )
 
-def generate_preset_prompt(preset_name: Optional[str] = None, config_path: Optional[str] = "prompt.yaml") -> str:
-    """
-    YAMLファイルに定義されたプリセットを使用してプロンプトを生成する
-    
-    Parameters:
-    ----------
-    preset_name : str, optional
-        使用するプリセットの名前
-    config_path : str, optional
-        設定ファイルのパス
-        
-    Returns:
-    -------
-    str
-        生成されたプロンプト
-    """
-    # 環境変数からプリセット名を取得（指定がなければデフォルト）
-    if preset_name is None:
-        preset_name = os.environ.get('PROMPT_PRESET', 'default')
-    
-    # 設定ファイルを読み込む
-    presets = load_config_from_yaml(config_path)
-    
-    # プリセットが存在するか確認
-    if preset_name not in presets:
-        print(f"Warning: Preset '{preset_name}' not found in config. Using default settings.")
-        preset_name = "default"
-        
-    # デフォルトプリセットが存在しない場合は空の辞書を使用
-    if preset_name not in presets:
-        preset_config = {}
-    else:
-        preset_config = presets[preset_name]
-    
-    # プロンプトを生成して返す
-    return generate_image_prompt(**preset_config)
 
 # 使用例
 if __name__ == "__main__":
     # サンプル設定ファイルの作成
     sample_config = {
         "default": {
-            "art_style": "Soft color palette, detailed line art in modern animation style",
-            "gender": "Female",
-            "age": "20 years old",
-            "eye": "Red",
-            "hair": "Medium wavy hair, caramel brown, with detailed hair accessories",
-            "pose": "Gentle hand gestures picking flowers",
-            "expression": "Smiling happily, pay attention to the subtle shading of the expression",
-            "gaze": "Gently toward the flower held in hand",
-            "clothing": "Spring-like floral dress, focusing on flower embroidery and frill details",
-            "composition": "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail",
-            "scene": "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
+            "prompt":
+            {
+                "art_style": "Soft color palette, detailed line art in modern animation style",
+                "gender": "Female",
+                "age": "20 years old",
+                "eye": "Red",
+                "hair": "Medium wavy hair, caramel brown, with detailed hair accessories",
+                "pose": "Gentle hand gestures picking flowers",
+                "expression": "Smiling happily, pay attention to the subtle shading of the expression",
+                "gaze": "Gently toward the flower held in hand",
+                "clothing": "Spring-like floral dress, focusing on flower embroidery and frill details",
+                "composition": "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail",
+                "scene": "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
+            }
         },
         "library": {
-            "art_style": "水彩画風のやわらかいタッチ",
-            "age": "20歳",
-            "hair": "美しく長い銀髪、風に吹かれている様子",
-            "pose": "本を読んでいる姿勢",
-            "scene": "図書館の窓際で読書を楽しむ様子"
+            "prompt":
+            {
+                "art_style": "水彩画風のやわらかいタッチ",
+                "age": "20歳",
+                "hair": "美しく長い銀髪、風に吹かれている様子",
+                "pose": "本を読んでいる姿勢",
+                "scene": "図書館の窓際で読書を楽しむ様子"
+            }
         },
         "fantasy": {
-            "art_style": "ファンタジーイラスト、鮮やかな色彩と細かい装飾",
-            "age": "18歳",
-            "hair": "長い金髪、花の冠で飾られている",
-            "clothing": "魔法使いのローブ、星と月の模様の刺繍",
-            "scene": "神秘的な森の中、魔法の光に囲まれている"
+            "prompt":
+            {
+                "art_style": "ファンタジーイラスト、鮮やかな色彩と細かい装飾",
+                "age": "18歳",
+                "hair": "長い金髪、花の冠で飾られている",
+                "clothing": "魔法使いのローブ、星と月の模様の刺繍",
+                "scene": "神秘的な森の中、魔法の光に囲まれている"
+            }
         },
-        "cyberpunk": {
-            "art_style": "サイバーパンク風、ネオンの輝きと未来的な質感",
-            "hair": "派手なピンク色の短髪、サイバネティック装飾",
-            "clothing": "未来的な戦闘服、LEDライトの装飾",
-            "scene": "未来都市の夜景、霧雨と電子看板の光"
-        }
     }
     
     # サンプル設定ファイルを保存
@@ -202,9 +138,8 @@ if __name__ == "__main__":
 
     # サンプル設定ファイルを使用したプロンプト生成
     print("YAML設定ファイルからのプロンプト:")
-    preset_prompt = generate_preset_prompt("library", "sample_prompt_config.yaml")
-    # 動作確認用
-    # preset_prompt = generate_preset_prompt(config_path="prompt.yaml")
+    os.environ["PROMPT_CONFIG_PATH"] = "sample_prompt_config.yaml"
+    preset_prompt = generate_image_prompt()
     print(preset_prompt)
     print("\n" + "="*50 + "\n")
     
