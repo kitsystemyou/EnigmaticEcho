@@ -3,23 +3,20 @@ import yaml
 from typing import Optional, Dict, Any
 
 
-def load_config_from_yaml(config_path: Optional[str] = None) -> Dict[str, Dict[str, str]]:
+def load_config_from_yaml() -> Dict[str, Any]:
     """
     YAMLファイルから設定を読み込む関数
-    
-    Parameters:
-    ----------
-    config_path : str, optional
-        設定ファイルのパス
-        
+
     Returns:
     -------
-    Dict[str, Dict[str, str]]
+    Dict[str, Any]
         読み込んだ設定
+        yamlの型がまだ今後変わる可能性があるのでいったん Any にしておく
+
+    TODO: 中身の tweet_text や prompt のキーが無かったらエラーにする
     """
     # 環境変数から設定ファイルのパスを取得（指定がなければデフォルト）
-    if config_path is None:
-        config_path = os.environ.get('PROMPT_CONFIG_PATH', 'prompt_config.yaml')
+    config_path = os.environ.get('PROMPT_CONFIG_PATH', 'prompt_config.yaml')
     
     # 設定ファイルが存在するか確認
     if not os.path.exists(config_path):
@@ -37,7 +34,7 @@ def load_config_from_yaml(config_path: Optional[str] = None) -> Dict[str, Dict[s
 
         # 値が存在しないまたは空の場合は空の辞書を使用
         if not preset_config:
-            preset_config = {}
+            raise ValueError("preset_config が空または存在しません")
         return preset_config
     except Exception as e:
         print(f"Error loading config file: {e}")
