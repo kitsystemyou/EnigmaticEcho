@@ -89,5 +89,5 @@ if __name__ == "__main__":
     # 画像生成と投稿
     config = load_config_from_yaml(CONFIG_PATH)
     prompt = generate_image_prompt(**config)
-    tweet_text = config["tweet_text"]
+    tweet_text = config.get("tweet_text", "default tweet texts :)")
     generate_and_post_image(prompt, tweet_text)
