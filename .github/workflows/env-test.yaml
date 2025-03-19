@@ -1,0 +1,21 @@
+name: ENV-TEST
+
+on:
+  workflow_dispatch:  # 手動実行用
+
+jobs:
+  post-silver-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Run script
+        env:
+          SCRIPT_WORD: ${{ secrets.SCRIPT_OUTPUT }}
+        run: echo $SCRIPT_WORD
