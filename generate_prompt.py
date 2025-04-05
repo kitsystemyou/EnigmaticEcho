@@ -5,17 +5,17 @@ import os
 
 
 def generate_image_prompt(
-    art_style: Optional[str] = "Soft color palette, detailed line art in modern animation style",
+    art_style: Optional[str] = "The illustration is done in a anime cel-shaded style",
     gender: Optional[str] = "Female",
     age: Optional[str] = "20 years old",
     eye: Optional[str] = "Red",
     hair: Optional[str] = "Medium wavy hair, caramel brown, with detailed hair accessories",
-    pose: Optional[str] = "Gentle hand gestures picking flowers",
-    expression: Optional[str] = "Smiling happily, pay attention to the subtle shading of the expression",
-    gaze: Optional[str] = "Gently toward the flower held in hand",
-    clothing: Optional[str] = "Spring-like floral dress, focusing on flower embroidery and frill details",
-    composition: Optional[str] = "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail",
-    scene: Optional[str] = "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted",
+    pose: Optional[str] = "waking happily on the sidewalk",
+    expression: Optional[str] = "A row of cherry blossom trees along with the road",
+    gaze: Optional[str] = "Looking at the camera",
+    clothing: Optional[str] = "An outfit resembling business casual for a new employee",
+    composition: Optional[str] = "Focusing on a woman walking and smiling this way",
+    scene: Optional[str] = "Cherry blossom petals are falling like a blizzard under spring sunshine",
     **kwargs
 ) -> str:
     """

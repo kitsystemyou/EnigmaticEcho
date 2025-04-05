@@ -3,6 +3,7 @@ from openai import OpenAI
 import requests
 from datetime import datetime
 from generate_prompt import generate_image_prompt
+from config import load_config_from_yaml
 from multiprocessing import Pool, cpu_count
 import time
 import random
@@ -50,19 +51,24 @@ def generate_and_save_image(prompt: str, output_dir="generated_images"):
 
 if __name__ == "__main__":
     # API keyの設定
-    os.environ["OPENAI_API_KEY"] = ""
+    # os.environ["OPENAI_API_KEY"] = ""
+    # os.environ["PROMPT_PRESET"] = ""
     
-    # 画像生成
-    # prompt = "紅い目で長い銀髪の20代ぐらいの女性、全身、幻想的な背景、日本のアニメーション調の繊細で多彩な色彩の画像"
-    prompt = generate_image_prompt(
-        art_style="The illustration is done in a flat-colored anime cel-shaded style",
-        hair="Beautiful silver hair to the tips, wavy semi-long",
-        pose="Sitting and reading a book", # Not specified at this point
-        gaze="Looking at the camera",
-        composition="Focusing on a woman sitting and reading a book, while also showing the surrounding nature",
-        clothing="Spring-like floral dress primarily in light pastel colors, with attention to flower embroidery and frill details",
-        scene="A table and chair next to a log cabin, sitting on the chair reading a book"
-    )
+    # 画像生成 直でパラメータいじりたい時用
+    # prompt = generate_image_prompt(
+    #     art_style="The illustration is done in a anime cel-shaded style",
+    #     hair="silver hair in a half-updo pulled to the side",
+    #     pose="waking happily on the sidewalk",
+    #     expression="A row of cherry blossom trees along with the road",
+    #     gaze="Looking at the camera",
+    #     composition="Focusing on a woman walking and smiling this way",
+    #     clothing="An outfit resembling business casual for a new employee",
+    #     scene="Cherry blossom petals are falling like a blizzard under spring sunshine"
+    # )
+
+    # 画像生成と投稿
+    config = load_config_from_yaml()
+    prompt = generate_image_prompt(**config.get("prompt"))
     print(prompt)
 
     num_processes: int = 4
