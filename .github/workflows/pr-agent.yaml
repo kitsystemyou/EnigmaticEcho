@@ -19,7 +19,6 @@ jobs:
           env:
             OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            github_action_config.auto_review: true
-            github_action_config.auto_describe: true
-            github_action_config.auto_improve: false
+            GITHUB_ACTION.AUTO_REVIEW: true
+            GITHUB_ACTION.AUTO_DESCRIBE: true
+            GITHUB_ACTION.AUTO_IMPROVE: false
