@@ -66,7 +66,7 @@ if __name__ == "__main__":
     #     scene="Cherry blossom petals are falling like a blizzard under spring sunshine"
     # )
 
-    # 画像生成と投稿
+    # config読み込みと画像生成
     config = load_config_from_yaml()
     prompt = generate_image_prompt(**config.get("prompt"))
     print(prompt)

@@ -10,12 +10,12 @@ def generate_image_prompt(
     age: Optional[str] = "20 years old",
     eye: Optional[str] = "Red",
     hair: Optional[str] = "Medium wavy hair, caramel brown, with detailed hair accessories",
-    pose: Optional[str] = "waking happily on the sidewalk",
-    expression: Optional[str] = "A row of cherry blossom trees along with the road",
+    pose: Optional[str] = "sitting and hold flowers",
+    expression: Optional[str] = "Smiling happily, pay attention to the subtle shading of the expression",
     gaze: Optional[str] = "Looking at the camera",
-    clothing: Optional[str] = "An outfit resembling business casual for a new employee",
-    composition: Optional[str] = "Focusing on a woman walking and smiling this way",
-    scene: Optional[str] = "Cherry blossom petals are falling like a blizzard under spring sunshine",
+    clothing: Optional[str] = "Spring-like floral dress, focusing on flower embroidery and frill details",
+    composition: Optional[str] = "Focusing on a woman sitting and smiling with flowers",
+    scene: Optional[str] = "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted",
     **kwargs
 ) -> str:
     """
@@ -67,6 +67,7 @@ Clothing/decoration: {clothing}
 Composition: {composition}
 Scene or situation: {scene}
 soft, faint lines and a light color palette to create a dreamlike and fragile appearance.
+Realistic images that look like real life photos are prohibited.
 """
 
     return prompt_template.format(
