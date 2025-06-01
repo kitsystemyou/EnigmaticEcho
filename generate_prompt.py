@@ -10,12 +10,12 @@ def generate_image_prompt(
     age: Optional[str] = "20 years old",
     eye: Optional[str] = "Red",
     hair: Optional[str] = "Medium wavy hair, caramel brown, with detailed hair accessories",
-    pose: Optional[str] = "sitting and hold flowers",
+    pose: Optional[str] = "Walking and viewing hydrangea with un umbrella",
     expression: Optional[str] = "Smiling happily, pay attention to the subtle shading of the expression",
     gaze: Optional[str] = "Looking at the camera",
     clothing: Optional[str] = "Spring-like floral dress, focusing on flower embroidery and frill details",
-    composition: Optional[str] = "Focusing on a woman sitting and smiling with flowers",
-    scene: Optional[str] = "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted",
+    composition: Optional[str] = "an anime-style illustration with a strong emphasis on elegance and fantasy aesthetics. The character has large, expressive eyes, a hallmark of anime art, and her features are delicate and idealized. The coloring is soft and detailed, with a pastel palette that enhances the dreamlike atmosphere. The setting is lush with vividly rendered hydrangeas in various shades, contributing to a romantic and serene mood. The character’s elaborate dress and accessories, including floral motifs and lace, reflect a rococo or victorian-inspired fantasy style, often seen in bishoujo (beautiful girl) illustrations. Overall, the image combines elements of anime, fantasy fashion, and floral art to create an ethereal and graceful visual",
+    scene: Optional[str] = "Relaxed flower field in the rain during the rainy season with holding an umbrella , with surrounding hydrangea carefully depicted",
     **kwargs
 ) -> str:
     """
