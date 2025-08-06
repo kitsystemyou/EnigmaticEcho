@@ -1,12 +1,12 @@
 import tweepy
 import os
-from openai import OpenAI
+from openai import OpenAI, APIError, BadRequestError  # エラークラスをインポート
 import requests
 from datetime import datetime
 from generate_prompt import generate_image_prompt
 from config import load_config_from_yaml
 from typing import Optional, Dict, Any
-import os
+import time  # timeモジュールをインポート
 
 
 def setup_twitter_clients():
@@ -36,19 +36,59 @@ def generate_and_post_image(prompt, tweet_text):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     temp_image = "temp_image.png"
 
-    try:
-        # 画像生成
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=prompt,
-            size="1024x1024",
-            quality="standard",
-            n=1
-        )
+    # --- リトライ設定 ---
+    max_retries = 3
+    retry_delay = 5  # 秒
+    image_response_data = None
 
+    for attempt in range(max_retries):
+        try:
+            print(f"画像生成を試行中... ({attempt + 1}/{max_retries})")
+            # 画像生成
+            response = client.images.generate(
+                model="dall-e-3",
+                prompt=prompt,
+                size="1024x1024",
+                quality="standard",
+                n=1,
+            )
+            image_response_data = response  # 成功したらレスポンスを保持
+            print("画像生成に成功しました。")
+            break  # 成功したらリトライループを抜ける
+
+        except (APIError, BadRequestError) as e:
+            # APIError(サーバーエラー等) と BadRequestError(リクエストエラー) をまとめて捕捉
+
+            # BadRequestErrorのうち、コンテンツポリシー違反 "以外" の場合はリトライしない
+            if isinstance(e, BadRequestError) and e.code != 'content_policy_violation':
+                print(f"エラー: 修正不能なリクエストエラーのため処理を中止します。詳細: {e}")
+                return e
+
+            # 上記以外のエラー (APIError または content_policy_violation) の場合はリトライ処理へ
+            print(f"エラーが発生しました (リトライ対象): {e}")
+
+            if attempt < max_retries - 1:
+                print(f"{retry_delay}秒待機してリトライします...")
+                time.sleep(retry_delay)
+            else:
+                print("リトライ回数の上限に達しました。")
+                return e
+
+        except Exception as e:
+            # その他の予期せぬエラー
+            print(f"予期せぬエラーが発生しました: {e}")
+            return e
+
+    # 画像生成に最終的に失敗した場合
+    if not image_response_data:
+        print("画像生成に失敗しました。処理を終了します。")
+        return None
+
+    try:
         # 画像ダウンロード
-        image_url = response.data[0].url
+        image_url = image_response_data.data[0].url
         image_response = requests.get(image_url)
+        image_response.raise_for_status() # HTTPエラーのチェック
 
         with open(temp_image, "wb") as f:
             f.write(image_response.content)
@@ -62,17 +102,22 @@ def generate_and_post_image(prompt, tweet_text):
         # ツイート投稿（v2 API）
         tweet = client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
 
-        os.remove(temp_image)
         print("ツイートを投稿しました")
         return tweet.data['id']
 
+    except requests.exceptions.RequestException as e:
+        print(f"画像ダウンロード中にエラーが発生しました: {e}")
+        return e
     except Exception as e:
-        print(f"エラーが発生しました: {str(e)}")
+        # Twitterへの投稿処理などでエラーが発生した場合
+        print(f"画像ダウンロード後またはツイート投稿処理中にエラーが発生しました: {str(e)}")
         return e
 
     finally:
+        # 一時ファイルを確実に削除
         if os.path.exists(temp_image):
             os.remove(temp_image)
+
 
 if __name__ == "__main__":
     # 環境変数の設定(デバッグ用)
