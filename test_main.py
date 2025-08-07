@@ -83,7 +83,7 @@ class TestGenerateAndPostImage(unittest.TestCase):
             mock_time_sleep.assert_called_once()
             self.mock_client_v2.create_tweet.assert_called_once()
 
-
+    # ▼▼▼ 修正点1 ▼▼▼
     def test_failure_after_max_retries(self):
         """リトライ上限までエラーが続き、最終的に失敗するケース"""
         with patch('main.APIError', new=MockOpenAIAPIError), \
@@ -96,18 +96,19 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.time.sleep') as mock_time_sleep:
 
             mock_openai_client = mock_openai_class.return_value
-            error_to_raise = MockOpenAIAPIError("Server error")
-            mock_openai_client.images.generate.side_effect = [error_to_raise] * 3
+            mock_openai_client.images.generate.side_effect = [MockOpenAIAPIError("Server error")] * 3
 
-            result = generate_and_post_image("a server-breaking cat", "test tweet")
+            # self.assertRaises の中で関数を呼び、特定の例外が発生することを検証する
+            with self.assertRaises(MockOpenAIAPIError):
+                generate_and_post_image("a server-breaking cat", "test tweet")
 
-            self.assertEqual(result, error_to_raise)
+            # 検証内容の変更
             self.assertEqual(mock_openai_client.images.generate.call_count, 3)
             self.assertEqual(mock_time_sleep.call_count, 2)
             mock_requests_get.assert_not_called()
             mock_setup_clients.assert_not_called()
 
-
+    # ▼▼▼ 修正点2 ▼▼▼
     def test_failure_on_non_retryable_error(self):
         """リトライ対象外のBadRequestErrorで即座に失敗するケース"""
         with patch('main.APIError', new=MockOpenAIAPIError), \
@@ -120,12 +121,15 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.time.sleep') as mock_time_sleep:
 
             mock_openai_client = mock_openai_class.return_value
-            error_to_raise = MockOpenAIBadRequestError("Invalid prompt.", code='invalid_request_error')
-            mock_openai_client.images.generate.side_effect = [error_to_raise]
+            mock_openai_client.images.generate.side_effect = [
+                MockOpenAIBadRequestError("Invalid prompt.", code='invalid_request_error')
+            ]
 
-            result = generate_and_post_image("a very invalid cat", "test tweet")
+            # self.assertRaises の中で関数を呼び、特定の例外が発生することを検証する
+            with self.assertRaises(MockOpenAIBadRequestError):
+                generate_and_post_image("a very invalid cat", "test tweet")
             
-            self.assertEqual(result, error_to_raise)
+            # 検証内容の変更
             mock_openai_client.images.generate.assert_called_once()
             mock_time_sleep.assert_not_called()
             mock_setup_clients.assert_not_called()
