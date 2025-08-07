@@ -10,7 +10,6 @@ import time
 import random
 
 def setup_twitter_clients():
-    # ... (変更なし) ...
     auth = tweepy.OAuthHandler(
         os.getenv("TWITTER_API_KEY"),
         os.getenv("TWITTER_API_SECRET")
@@ -83,7 +82,7 @@ def generate_and_post_image(prompt, tweet_text):
 
     try:
         image_url = image_response_data.data[0].url
-        image_response = requests.get(image_url)
+        image_response = requests.get(image_url, timeout=5)
         image_response.raise_for_status()
         with open(temp_image, "wb") as f:
             f.write(image_response.content)
