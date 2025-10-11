@@ -87,7 +87,7 @@ def generate_and_post_image(prompt, tweet_text):
                 else:
                     print("リトライ回数の上限に達しました。")
                     raise
-                
+
         except Exception as e:
             print(f"予期せぬエラーが発生しました: {e}")
             raise
