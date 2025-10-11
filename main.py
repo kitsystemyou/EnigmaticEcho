@@ -50,29 +50,44 @@ def generate_and_post_image(prompt, tweet_text):
             break
 
         except (APIError, BadRequestError) as e:
-            is_retryable_error = False
+            # Check for billing limit errors first
             if isinstance(e, BadRequestError):
-                # .code属性が存在し、かつそれがコンテンツポリシー違反の場合のみリトライ対象
-                if hasattr(e, 'code') and e.code == 'content_policy_violation':
-                    is_retryable_error = True
+                error_code = getattr(e, 'code', None)
+
+                # Billing errors should not be retried
+                if error_code == 'billing_hard_limit_reached':
+                    print(f"エラー: OpenAI APIの請求上限に達しました。アカウントの請求設定を確認してください。")
+                    print(f"詳細: {e}")
+                    raise
+
+                # Content policy violations are retryable
+                if error_code == 'content_policy_violation':
+                    print(f"エラーが発生しました (リトライ対象): {e}")
+                    if attempt < max_retries - 1:
+                        wait_time = retry_delay + random.uniform(0, 1)
+                        print(f"{wait_time:.2f}秒待機してリトライします...")
+                        time.sleep(wait_time)
+                        retry_delay *= 2
+                    else:
+                        print("リトライ回数の上限に達しました。")
+                        raise
+                else:
+                    # Other BadRequestErrors are not retryable
+                    print(f"エラー: 修正不能なリクエストエラーのため処理を中止します。詳細: {e}")
+                    raise
+
             elif isinstance(e, APIError):
-                # APIErrorはリトライ対象
-                is_retryable_error = True
+                # APIError is retryable (server errors, rate limits, etc.)
+                print(f"エラーが発生しました (リトライ対象): {e}")
+                if attempt < max_retries - 1:
+                    wait_time = retry_delay + random.uniform(0, 1)
+                    print(f"{wait_time:.2f}秒待機してリトライします...")
+                    time.sleep(wait_time)
+                    retry_delay *= 2
+                else:
+                    print("リトライ回数の上限に達しました。")
+                    raise
 
-            if not is_retryable_error:
-                print(f"エラー: 修正不能なリクエストエラーのため処理を中止します。詳細: {e}")
-                raise
-
-            print(f"エラーが発生しました (リトライ対象): {e}")
-            if attempt < max_retries - 1:
-                wait_time = retry_delay + random.uniform(0, 1)
-                print(f"{wait_time:.2f}秒待機してリトライします...")
-                time.sleep(wait_time)
-                retry_delay *= 2
-            else:
-                print("リトライ回数の上限に達しました。")
-                raise
-                
         except Exception as e:
             print(f"予期せぬエラーが発生しました: {e}")
             raise
@@ -118,3 +133,5 @@ if __name__ == "__main__":
         print(f"投稿成功。ツイートID: {tweet_id}")
     except Exception as e:
         print(f"\nスクリプトの実行中に致命的なエラーが発生しました。処理を終了します。")
+        print(f"エラー詳細: {e}")
+        raise
