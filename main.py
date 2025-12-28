@@ -109,10 +109,28 @@ def generate_and_post_image(prompt, tweet_text):
         media = api_v1.media_upload(temp_image)
 
         # ツイート投稿（v2 API）
-        tweet = client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
+        max_tweet_retries = 3
+        tweet_retry_delay = 5
+        for attempt in range(max_tweet_retries):
+            try:
+                tweet = client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
+                print("ツイートを投稿しました")
+                return tweet.data['id']
+            except tweepy.errors.Forbidden as e:
+                print(f"ツイート投稿に失敗しました（403 Forbidden）({attempt + 1}/{max_tweet_retries}): {e}")
+                if attempt < max_tweet_retries - 1:
+                    wait_time = tweet_retry_delay + random.uniform(0, 1)
+                    print(f"{wait_time:.2f}秒待機してリトライします...")
+                    time.sleep(wait_time)
+                    tweet_retry_delay *= 2
+                else:
+                    print("リトライ回数の上限に達しました。")
+                    raise
+            except Exception as e:
+                # Handle other potential exceptions during tweet posting
+                print(f"ツイート投稿中に予期せぬエラーが発生しました: {e}")
+                raise
 
-        print("ツイートを投稿しました")
-        return tweet.data['id']
     except requests.exceptions.RequestException as e:
         print(f"画像ダウンロード中にエラーが発生しました: {e}")
         raise
