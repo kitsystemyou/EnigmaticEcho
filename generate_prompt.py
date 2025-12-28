@@ -1,7 +1,7 @@
-from config import load_config_from_yaml
-from typing import Optional, Dict, Any
-import yaml
 import os
+from typing import Optional
+
+import yaml
 
 
 def generate_image_prompt(
@@ -9,18 +9,39 @@ def generate_image_prompt(
     gender: Optional[str] = "Female",
     age: Optional[str] = "20 years old",
     eye: Optional[str] = "Red",
-    hair: Optional[str] = "Medium wavy hair, caramel brown, with detailed hair accessories",
+    hair: Optional[str] = (
+        "Medium wavy hair, caramel brown, with detailed hair accessories"
+    ),
     pose: Optional[str] = "Walking and viewing hydrangea with un umbrella",
-    expression: Optional[str] = "Smiling happily, pay attention to the subtle shading of the expression",
+    expression: Optional[str] = (
+        "Smiling happily, pay attention to the subtle shading of the expression"
+    ),
     gaze: Optional[str] = "Looking at the camera",
-    clothing: Optional[str] = "Spring-like floral dress, focusing on flower embroidery and frill details",
-    composition: Optional[str] = "an anime-style illustration with a strong emphasis on elegance and fantasy aesthetics. The character has large, expressive eyes, a hallmark of anime art, and her features are delicate and idealized. The coloring is soft and detailed, with a pastel palette that enhances the dreamlike atmosphere. The setting is lush with vividly rendered hydrangeas in various shades, contributing to a romantic and serene mood. The character’s elaborate dress and accessories, including floral motifs and lace, reflect a rococo or victorian-inspired fantasy style, often seen in bishoujo (beautiful girl) illustrations. Overall, the image combines elements of anime, fantasy fashion, and floral art to create an ethereal and graceful visual",
-    scene: Optional[str] = "Relaxed flower field in the rain during the rainy season with holding an umbrella , with surrounding hydrangea carefully depicted",
-    **kwargs
+    clothing: Optional[str] = (
+        "Spring-like floral dress, focusing on flower embroidery and frill details"
+    ),
+    composition: Optional[str] = (
+        "an anime-style illustration with a strong emphasis on elegance and "
+        "fantasy aesthetics. The character has large, expressive eyes, a hallmark of "
+        "anime art, and her features are delicate and idealized. The coloring is "
+        "soft and detailed, with a pastel palette that enhances the dreamlike "
+        "atmosphere. The setting is lush with vividly rendered hydrangeas in "
+        "various shades, contributing to a romantic and serene mood. The "
+        "character’s elaborate dress and accessories, including floral motifs and "
+        "lace, reflect a rococo or victorian-inspired fantasy style, often seen "
+        "in bishoujo (beautiful girl) illustrations. Overall, the image combines "
+        "elements of anime, fantasy fashion, and floral art to create an "
+        "ethereal and graceful visual"
+    ),
+    scene: Optional[str] = (
+        "Relaxed flower field in the rain during the rainy season with holding an "
+        "umbrella , with surrounding hydrangea carefully depicted"
+    ),
+    **kwargs,
 ) -> str:
     """
     画像生成のプロンプトを作成する関数
-    
+
     Parameters:
     ----------
     art_style : str, optional
@@ -45,9 +66,8 @@ def generate_image_prompt(
         構図の説明
     scene : str, optional
         シーンや状況の説明
-    **kwargs : 
+    **kwargs :
         その他のパラメータ
-    
     Returns:
     -------
     str
@@ -66,7 +86,8 @@ Gaze: {gaze}
 Clothing/decoration: {clothing}
 Composition: {composition}
 Scene or situation: {scene}
-soft, faint lines and a light color palette to create a dreamlike and fragile appearance.
+soft, faint lines and a light color palette to create a dreamlike and fragile
+appearance.
 Realistic images that look like real life photos are prohibited.
 """
 
@@ -92,17 +113,33 @@ if __name__ == "__main__":
         "default": {
             "prompt":
             {
-                "art_style": "Soft color palette, detailed line art in modern animation style",
+                "art_style": (
+                    "Soft color palette, detailed line art in modern animation style"
+                ),
                 "gender": "Female",
                 "age": "20 years old",
                 "eye": "Red",
-                "hair": "Medium wavy hair, caramel brown, with detailed hair accessories",
+                "hair": (
+                    "Medium wavy hair, caramel brown, with detailed hair accessories"
+                ),
                 "pose": "Gentle hand gestures picking flowers",
-                "expression": "Smiling happily, pay attention to the subtle shading of the expression",
+                "expression": (
+                    "Smiling happily, pay attention to the subtle shading of the "
+                    "expression"
+                ),
                 "gaze": "Gently toward the flower held in hand",
-                "clothing": "Spring-like floral dress, focusing on flower embroidery and frill details",
-                "composition": "Capturing the full body of a child in a flower field while also expressing the surrounding nature in detail",
-                "scene": "Relaxed flower field under spring sunshine, with each surrounding flower carefully depicted"
+                "clothing": (
+                    "Spring-like floral dress, focusing on flower embroidery and "
+                    "frill details"
+                ),
+                "composition": (
+                    "Capturing the full body of a child in a flower field while "
+                    "also expressing the surrounding nature in detail"
+                ),
+                "scene": (
+                    "Relaxed flower field under spring sunshine, with each "
+                    "surrounding flower carefully depicted"
+                ),
             }
         },
         "library": {
@@ -126,14 +163,14 @@ if __name__ == "__main__":
             }
         },
     }
-    
+
     # サンプル設定ファイルを保存
     with open('sample_prompt_config.yaml', 'w', encoding='utf-8') as file:
         yaml.dump(sample_config, file, allow_unicode=True, default_flow_style=False)
-    
+
     print("サンプル設定ファイル 'sample_prompt_config.yaml' を作成しました。")
     print("\n" + "="*50 + "\n")
-    
+
     # 動作確認用
     # os.environ["PROMPT_PRESET"] = "silver"
 
@@ -143,7 +180,7 @@ if __name__ == "__main__":
     preset_prompt = generate_image_prompt()
     print(preset_prompt)
     print("\n" + "="*50 + "\n")
-    
+
     # カスタム設定を使用したプロンプト生成
     custom_config = {
         "art_style": "油彩画風の重厚なタッチ",
@@ -151,7 +188,7 @@ if __name__ == "__main__":
         "age": "40歳",
         "scene": "山頂から朝日を見る登山者"
     }
-    
+
     print("カスタム設定のプロンプト:")
     custom_prompt = generate_image_prompt(**custom_config)
     print(custom_prompt)

@@ -1,10 +1,10 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import tweepy
-import random
-import time
 
 from main import generate_and_post_image
+
 
 class MockRequestsException(Exception):
     pass
@@ -47,12 +47,14 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.os.remove') as mock_os_remove, \
              patch('main.time.sleep'):
             mock_openai_client = mock_openai_class.return_value
-            mock_openai_client.images.generate.return_value = self.mock_openai_success_response
+            mock_openai_client.images.generate.return_value = (
+                self.mock_openai_success_response
+            )
             mock_requests_get.return_value = self.mock_requests_success_response
             mock_setup_clients.return_value = (self.mock_api_v1, self.mock_client_v2)
-            
+
             result = generate_and_post_image("a cute cat", "test tweet")
-            
+
             self.assertEqual(result, "98765")
             self.mock_client_v2.create_tweet.assert_called_once()
             mock_os_remove.assert_called_once()
@@ -65,21 +67,23 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.os.remove'), \
              patch('main.time.sleep') as mock_time_sleep, \
              patch('main.random.uniform', return_value=0.5):
-            
+
             mock_openai_client = mock_openai_class.return_value
-            mock_openai_client.images.generate.return_value = self.mock_openai_success_response
+            mock_openai_client.images.generate.return_value = (
+                self.mock_openai_success_response
+            )
             mock_requests_get.return_value = self.mock_requests_success_response
             mock_setup_clients.return_value = (self.mock_api_v1, self.mock_client_v2)
-            
+
             mock_forbidden_response = MagicMock()
             mock_forbidden_response.status_code = 403
             self.mock_client_v2.create_tweet.side_effect = [
                 MockTweepyForbidden(mock_forbidden_response),
                 self.mock_tweet
             ]
-            
+
             result = generate_and_post_image("a cute cat", "test tweet")
-            
+
             self.assertEqual(result, "98765")
             self.assertEqual(self.mock_client_v2.create_tweet.call_count, 2)
             mock_time_sleep.assert_called_once_with(5.5)
@@ -94,17 +98,21 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.random.uniform', return_value=0.5):
 
             mock_openai_client = mock_openai_class.return_value
-            mock_openai_client.images.generate.return_value = self.mock_openai_success_response
+            mock_openai_client.images.generate.return_value = (
+                self.mock_openai_success_response
+            )
             mock_requests_get.return_value = self.mock_requests_success_response
             mock_setup_clients.return_value = (self.mock_api_v1, self.mock_client_v2)
 
             mock_forbidden_response = MagicMock()
             mock_forbidden_response.status_code = 403
-            self.mock_client_v2.create_tweet.side_effect = MockTweepyForbidden(mock_forbidden_response)
-            
+            self.mock_client_v2.create_tweet.side_effect = MockTweepyForbidden(
+                mock_forbidden_response
+            )
+
             with self.assertRaises(MockTweepyForbidden):
                 generate_and_post_image("a cute cat", "test tweet")
-            
+
             self.assertEqual(self.mock_client_v2.create_tweet.call_count, 3)
 
     def test_tweet_failure_on_other_exception(self):
@@ -116,15 +124,17 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.time.sleep'):
 
             mock_openai_client = mock_openai_class.return_value
-            mock_openai_client.images.generate.return_value = self.mock_openai_success_response
+            mock_openai_client.images.generate.return_value = (
+                self.mock_openai_success_response
+            )
             mock_requests_get.return_value = self.mock_requests_success_response
             mock_setup_clients.return_value = (self.mock_api_v1, self.mock_client_v2)
-            
+
             self.mock_client_v2.create_tweet.side_effect = Exception("Some other error")
-            
-            with self.assertRaises(Exception):
+
+            with self.assertRaises(Exception):  # noqa: B017
                 generate_and_post_image("a cute cat", "test tweet")
-            
+
             self.mock_client_v2.create_tweet.assert_called_once()
 
     def test_image_gen_retry_on_content_policy_and_succeed(self):
@@ -135,17 +145,19 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.setup_twitter_clients') as mock_setup_clients, \
              patch('main.os.path.exists'), \
              patch('main.os.remove'), \
-             patch('main.time.sleep') as mock_time_sleep:
+             patch('main.time.sleep') as mock_time_sleep:  # noqa: F841
             mock_openai_client = mock_openai_class.return_value
             mock_openai_client.images.generate.side_effect = [
-                MockOpenAIBadRequestError("Blocked by content filter.", code='content_policy_violation'),
-                self.mock_openai_success_response
+                MockOpenAIBadRequestError(
+                    "Blocked by content filter.", code="content_policy_violation"
+                ),
+                self.mock_openai_success_response,
             ]
             mock_requests_get.return_value = self.mock_requests_success_response
             mock_setup_clients.return_value = (self.mock_api_v1, self.mock_client_v2)
-            
+
             result = generate_and_post_image("a dangerous cat", "test tweet")
-            
+
             self.assertEqual(result, "98765")
             self.assertEqual(mock_openai_client.images.generate.call_count, 2)
             self.mock_client_v2.create_tweet.assert_called_once()
@@ -158,34 +170,43 @@ class TestGenerateAndPostImage(unittest.TestCase):
              patch('main.setup_twitter_clients') as mock_setup_clients, \
              patch('main.os.path.exists'), \
              patch('main.os.remove'), \
-             patch('main.time.sleep') as mock_time_sleep:
+             patch('main.time.sleep') as mock_time_sleep:  # noqa: F841
             mock_openai_client = mock_openai_class.return_value
-            mock_openai_client.images.generate.side_effect = [MockOpenAIAPIError("Server error")] * 3
-            
+            mock_openai_client.images.generate.side_effect = [
+                MockOpenAIAPIError("Server error")
+            ] * 3
+
             with self.assertRaises(MockOpenAIAPIError):
                 generate_and_post_image("a server-breaking cat", "test tweet")
-            
+
             self.assertEqual(mock_openai_client.images.generate.call_count, 3)
             mock_requests_get.assert_not_called()
             mock_setup_clients.assert_not_called()
 
     def test_image_gen_failure_on_non_retryable_error(self):
-        with patch('main.APIError', new=MockOpenAIAPIError), \
-             patch('main.BadRequestError', new=MockOpenAIBadRequestError), \
-             patch('main.OpenAI') as mock_openai_class, \
-             patch('main.requests.get') as mock_requests_get, \
-             patch('main.setup_twitter_clients') as mock_setup_clients, \
-             patch('main.os.path.exists'), \
-             patch('main.os.remove'), \
-             patch('main.time.sleep'):
+        with patch("main.APIError", new=MockOpenAIAPIError), patch(
+            "main.BadRequestError", new=MockOpenAIBadRequestError
+        ), patch("main.OpenAI") as mock_openai_class, patch(
+            "main.requests.get"
+        ) as mock_requests_get, patch(  # noqa: F841
+            "main.setup_twitter_clients"
+        ) as mock_setup_clients, patch(
+            "main.os.path.exists"
+        ), patch(
+            "main.os.remove"
+        ), patch(
+            "main.time.sleep"
+        ):
             mock_openai_client = mock_openai_class.return_value
             mock_openai_client.images.generate.side_effect = [
-                MockOpenAIBadRequestError("Invalid prompt.", code='invalid_request_error')
+                MockOpenAIBadRequestError(
+                    "Invalid prompt.", code="invalid_request_error"
+                )
             ]
-            
+
             with self.assertRaises(MockOpenAIBadRequestError):
                 generate_and_post_image("a very invalid cat", "test tweet")
-            
+
             mock_openai_client.images.generate.assert_called_once()
             mock_setup_clients.assert_not_called()
 
@@ -193,8 +214,8 @@ class TestGenerateAndPostImage(unittest.TestCase):
         with patch('main.APIError', new=MockOpenAIAPIError), \
              patch('main.BadRequestError', new=MockOpenAIBadRequestError), \
              patch('main.OpenAI') as mock_openai_class, \
-             patch('main.requests.get') as mock_requests_get, \
-             patch('main.setup_twitter_clients') as mock_setup_clients, \
+             patch('main.requests.get'), \
+             patch('main.setup_twitter_clients'), \
              patch('main.os.path.exists'), \
              patch('main.os.remove'), \
              patch('main.time.sleep'):
@@ -202,7 +223,7 @@ class TestGenerateAndPostImage(unittest.TestCase):
             mock_openai_client.images.generate.side_effect = [
                 MockOpenAIBadRequestError("Generic bad request.")
             ]
-            
+
             with self.assertRaises(MockOpenAIBadRequestError):
                 generate_and_post_image("a cat without a code", "test tweet")
 

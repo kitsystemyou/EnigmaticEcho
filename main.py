@@ -1,13 +1,14 @@
-import tweepy
 import os
-from openai import OpenAI, APIError, BadRequestError
-import requests
-from datetime import datetime
-from generate_prompt import generate_image_prompt
-from config import load_config_from_yaml
-from typing import Optional, Dict, Any
-import time
 import random
+import time
+
+import requests
+import tweepy
+from openai import APIError, BadRequestError, OpenAI
+
+from config import load_config_from_yaml
+from generate_prompt import generate_image_prompt
+
 
 def setup_twitter_clients():
     auth = tweepy.OAuthHandler(
@@ -28,13 +29,9 @@ def setup_twitter_clients():
     return api_v1, client_v2
 
 
-def generate_and_post_image(prompt, tweet_text):
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    temp_image = "temp_image.png"
+def generate_image_with_retries(client, prompt):
     max_retries = 3
     retry_delay = 5
-    image_response_data = None
-
     for attempt in range(max_retries):
         try:
             print(f"画像生成を試行中... ({attempt + 1}/{max_retries})")
@@ -45,23 +42,19 @@ def generate_and_post_image(prompt, tweet_text):
                 quality="standard",
                 n=1,
             )
-            image_response_data = response
             print("画像生成に成功しました。")
-            break
-
+            return response
         except (APIError, BadRequestError) as e:
-            # Check for billing limit errors first
             if isinstance(e, BadRequestError):
-                error_code = getattr(e, 'code', None)
-
-                # Billing errors should not be retried
-                if error_code == 'billing_hard_limit_reached':
-                    print(f"エラー: OpenAI APIの請求上限に達しました。アカウントの請求設定を確認してください。")
+                error_code = getattr(e, "code", None)
+                if error_code == "billing_hard_limit_reached":
+                    print(
+                        "エラー: OpenAI APIの請求上限に達しました。"
+                        "アカウントの請求設定を確認してください。"
+                    )
                     print(f"詳細: {e}")
                     raise
-
-                # Content policy violations are retryable
-                if error_code == 'content_policy_violation':
+                if error_code == "content_policy_violation":
                     print(f"エラーが発生しました (リトライ対象): {e}")
                     if attempt < max_retries - 1:
                         wait_time = retry_delay + random.uniform(0, 1)
@@ -72,12 +65,12 @@ def generate_and_post_image(prompt, tweet_text):
                         print("リトライ回数の上限に達しました。")
                         raise
                 else:
-                    # Other BadRequestErrors are not retryable
-                    print(f"エラー: 修正不能なリクエストエラーのため処理を中止します。詳細: {e}")
+                    print(
+                        "エラー: 修正不能なリクエストエラーのため処理を中止します。"
+                        f"詳細: {e}"
+                    )
                     raise
-
             elif isinstance(e, APIError):
-                # APIError is retryable (server errors, rate limits, etc.)
                 print(f"エラーが発生しました (リトライ対象): {e}")
                 if attempt < max_retries - 1:
                     wait_time = retry_delay + random.uniform(0, 1)
@@ -87,13 +80,17 @@ def generate_and_post_image(prompt, tweet_text):
                 else:
                     print("リトライ回数の上限に達しました。")
                     raise
-
         except Exception as e:
             print(f"予期せぬエラーが発生しました: {e}")
             raise
+    raise RuntimeError("画像生成に失敗しました。")
 
-    if not image_response_data:
-        raise RuntimeError("画像生成に失敗しました。")
+
+def generate_and_post_image(prompt, tweet_text):
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    temp_image = "temp_image.png"
+
+    image_response_data = generate_image_with_retries(client, prompt)
 
     try:
         image_url = image_response_data.data[0].url
@@ -113,11 +110,16 @@ def generate_and_post_image(prompt, tweet_text):
         tweet_retry_delay = 5
         for attempt in range(max_tweet_retries):
             try:
-                tweet = client_v2.create_tweet(text=tweet_text, media_ids=[media.media_id])
+                tweet = client_v2.create_tweet(
+                    text=tweet_text, media_ids=[media.media_id]
+                )
                 print("ツイートを投稿しました")
-                return tweet.data['id']
+                return tweet.data["id"]
             except tweepy.errors.Forbidden as e:
-                print(f"ツイート投稿に失敗しました（403 Forbidden）({attempt + 1}/{max_tweet_retries}): {e}")
+                print(
+                    "ツイート投稿に失敗しました（403 Forbidden）"
+                    f"({attempt + 1}/{max_tweet_retries}): {e}"
+                )
                 if attempt < max_tweet_retries - 1:
                     wait_time = tweet_retry_delay + random.uniform(0, 1)
                     print(f"{wait_time:.2f}秒待機してリトライします...")
@@ -135,7 +137,10 @@ def generate_and_post_image(prompt, tweet_text):
         print(f"画像ダウンロード中にエラーが発生しました: {e}")
         raise
     except Exception as e:
-        print(f"画像ダウンロード後またはツイート投稿処理中にエラーが発生しました: {str(e)}")
+        print(
+            "画像ダウンロード後またはツイート投稿処理中にエラーが発生しました: "
+            f"{str(e)}"
+        )
         raise
     finally:
         if os.path.exists(temp_image):
@@ -150,6 +155,6 @@ if __name__ == "__main__":
         tweet_id = generate_and_post_image(prompt, tweet_text)
         print(f"投稿成功。ツイートID: {tweet_id}")
     except Exception as e:
-        print(f"\nスクリプトの実行中に致命的なエラーが発生しました。処理を終了します。")
+        print("\nスクリプトの実行中に致命的なエラーが発生しました。処理を終了します。")
         print(f"エラー詳細: {e}")
         raise

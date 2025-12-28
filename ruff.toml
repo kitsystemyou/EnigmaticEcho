@@ -1,0 +1,19 @@
+# Allow lines to be up to 88 characters long.
+line-length = 88
+
+[lint]
+# Enable PEP 8 (E) and Pyflakes (F) rules by default.
+# See https://docs.astral.sh/ruff/rules/ for a full list of rules.
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = []
+
+[format]
+# Use double quotes for strings.
+quote-style = "double"
