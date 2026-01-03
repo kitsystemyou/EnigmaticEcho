@@ -1,3 +1,4 @@
+import base64
 import os
 import random
 import time
@@ -36,10 +37,10 @@ def generate_image_with_retries(client, prompt):
         try:
             print(f"画像生成を試行中... ({attempt + 1}/{max_retries})")
             response = client.images.generate(
-                model="dall-e-3",
+                model="gpt-image-1.5",
                 prompt=prompt,
                 size="1024x1024",
-                quality="standard",
+                quality="medium",
                 n=1,
             )
             print("画像生成に成功しました。")
@@ -93,11 +94,9 @@ def generate_and_post_image(prompt, tweet_text):
     image_response_data = generate_image_with_retries(client, prompt)
 
     try:
-        image_url = image_response_data.data[0].url
-        image_response = requests.get(image_url, timeout=5)
-        image_response.raise_for_status()
+        image_bytes = base64.b64decode(image_response_data.data[0].b64_json)
         with open(temp_image, "wb") as f:
-            f.write(image_response.content)
+            f.write(image_bytes)
 
         # Twitter APIクライアント取得
         api_v1, client_v2 = setup_twitter_clients()

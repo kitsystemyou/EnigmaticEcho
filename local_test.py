@@ -1,10 +1,10 @@
+import base64
 import os
 import random
 import time
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
 
-import requests
 from openai import OpenAI
 
 from config import load_config_from_yaml
@@ -21,19 +21,16 @@ def generate_and_save_image(prompt: str, output_dir="generated_images"):
     try:
         # 画像生成リクエスト
         response = client.images.generate(
-            model="dall-e-3",
+            model="gpt-image-1.5",
             prompt=prompt,
             size="1024x1024",
-            quality="standard",
+            quality="medium",
             n=1,
             timeout=1000
         )
 
-        # 画像URLの取得
-        image_url = response.data[0].url
-
-        # 画像のダウンロード
-        image_response = requests.get(image_url)
+        # 画像バイナリの取得
+        image_bytes = base64.b64decode(response.data[0].b64_json)
 
         # ファイル名の生成（タイムスタンプ付き）
         wait_time_ms = random.randint(0, 1000)  # 0から1000の整数を生成
@@ -43,7 +40,7 @@ def generate_and_save_image(prompt: str, output_dir="generated_images"):
 
         # 画像の保存
         with open(filename, "wb") as f:
-            f.write(image_response.content)
+            f.write(image_bytes)
 
         print(f"画像を保存しました: {filename}")
         return filename
@@ -52,10 +49,11 @@ def generate_and_save_image(prompt: str, output_dir="generated_images"):
         print(f"エラーが発生しました: {str(e)}")
         return None
 
+
 if __name__ == "__main__":
     # API keyの設定
     # os.environ["OPENAI_API_KEY"] = ""
-    # os.environ["PROMPT_PRESET"] = ""
+    os.environ["PROMPT_PRESET"] = "gold"
 
     # 画像生成 直でパラメータいじりたい時用
     # prompt = generate_image_prompt(
