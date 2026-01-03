@@ -5,37 +5,26 @@ import yaml
 
 
 def generate_image_prompt(
-    art_style: Optional[str] = "The illustration is done in a anime cel-shaded style",
+    art_style: Optional[str] = "Detailed line art in a modern japanese anime style, emphasizing delicate textures on fabric and hair. The lighting is gentle and neutral natural light, creating a serene and elegant atmosphere with soft shading.",
     gender: Optional[str] = "Female",
     age: Optional[str] = "20 years old",
     eye: Optional[str] = "Red",
     hair: Optional[str] = (
-        "Medium wavy hair, caramel brown, with detailed hair accessories"
+        "Neatly tied up in an elegant traditional style with modern touches, silver, adorned with exquisite kanzashi (Japanese hair ornaments) featuring cherry blossoms and tassels. Slight loose strands frame her face due to movement."
     ),
-    pose: Optional[str] = "Walking and viewing hydrangea with un umbrella",
+    pose: Optional[str] = "Standing gracefully and turning slightly towards the viewer, holding out the long sleeves (furisode) of her kimono with both hands to display the beautiful floral patterns. A pose that invites the viewer to admire her outfit.",
     expression: Optional[str] = (
-        "Smiling happily, pay attention to the subtle shading of the expression"
+        "Laughing happily with a wide, smile, eyes sparkling with joy and excitement. Radiating pure happiness."
     ),
-    gaze: Optional[str] = "Looking at the camera",
+    gaze: Optional[str] = "Looking excitedly towards the viewer or slightly upwards, full of energy.",
     clothing: Optional[str] = (
-        "Spring-like floral dress, focusing on flower embroidery and frill details"
+        "Elegant traditional silk kimono with sophisticated floral patterns (such as cherry blossoms, peonies, and wisteria) in soft pastel shades like pale pink, light blue, and cream. Focusing on the detailed texture of the fabric, embroidery, and a beautifully tied obi sash. The kimono sleeves and hem are flowing dynamically around her due to the jump."
     ),
     composition: Optional[str] = (
-        "an anime-style illustration with a strong emphasis on elegance and "
-        "fantasy aesthetics. The character has large, expressive eyes, a hallmark of "
-        "anime art, and her features are delicate and idealized. The coloring is "
-        "soft and detailed, with a pastel palette that enhances the dreamlike "
-        "atmosphere. The setting is lush with vividly rendered hydrangeas in "
-        "various shades, contributing to a romantic and serene mood. The "
-        "character’s elaborate dress and accessories, including floral motifs and "
-        "lace, reflect a rococo or victorian-inspired fantasy style, often seen "
-        "in bishoujo (beautiful girl) illustrations. Overall, the image combines "
-        "elements of anime, fantasy fashion, and floral art to create an "
-        "ethereal and graceful visual"
+        "An anime-style illustration with a strong emphasis on cheerful energy and traditional Japanese aesthetics. The character has idealized features rendered with delicate lines. The setting is meticulously detailed with elements like aged wooden shrine architecture, stone lanterns, and sacred trees, contributing to a bright and playful mood. The character’s elaborate kimono and accessories reflect a refined bishoujo illustration style set in a traditional context. Overall, the image combines elements of modern anime art with the graceful beauty of traditional Japanese culture creating an energetic and charming visual."
     ),
     scene: Optional[str] = (
-        "Relaxed flower field in the rain during the rainy season with holding an "
-        "umbrella , with surrounding hydrangea carefully depicted"
+        "A lively moment in a peaceful Shinto shrine (jinja) grounds bathed in soft, dappled clear sunlight filtering through ancient trees. The main shrine building, a stone pathway, and many falling cherry blossom petals swirling around her due to her movement are carefully depicted, creating a joyful and dynamic atmosphere. Soft, faint lines and a light color palette to create a dreamlike appearance. Realistic images that look like real life photos are prohibited."
     ),
     **kwargs,
 ) -> str:
